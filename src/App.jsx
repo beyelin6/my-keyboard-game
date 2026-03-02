@@ -15,31 +15,31 @@ const ZHUYIN_MAP = {
   'KeyN': 'ㄙ', 'KeyM': 'ㄩ', 'Comma': 'ㄝ', 'Period': 'ㄡ', 'Slash': 'ㄥ'
 };
 
-// 符號模式專用的挑戰項目 (包含 Shift 組合鍵與功能鍵)
+// 符號模式挑戰清單：包含英文組合鍵、功能鍵、以及「注音標點符號」
 const SYMBOL_CHALLENGES = [
-  { code: 'Digit1', shift: true, label: '!', desc: '驚嘆號：表示強烈語氣' },
-  { code: 'Digit2', shift: true, label: '@', desc: '小老鼠 (At)：用於 Email' },
-  { code: 'Digit3', shift: true, label: '#', desc: '井字號 (Hash)：標籤' },
-  { code: 'Digit4', shift: true, label: '$', desc: '錢符號：貨幣單位' },
-  { code: 'Digit5', shift: true, label: '%', desc: '百分比符號' },
-  { code: 'Digit6', shift: true, label: '^', desc: '插入號：數學次方' },
-  { code: 'Digit7', shift: true, label: '&', desc: 'And (和)：連接詞' },
-  { code: 'Digit8', shift: true, label: '*', desc: '星號：乘法運算' },
-  { code: 'Digit9', shift: true, label: '(', desc: '左括號' },
-  { code: 'Digit0', shift: true, label: ')', desc: '右括號' },
-  { code: 'Minus', shift: true, label: '_', desc: '底線' },
-  { code: 'Equal', shift: true, label: '+', desc: '加號' },
-  { code: 'BracketLeft', shift: true, label: '{', desc: '大括號：開始' },
-  { code: 'BracketRight', shift: true, label: '}', desc: '大括號：結束' },
-  { code: 'Backslash', shift: true, label: '|', desc: '直槓 (Pipe)' },
-  { code: 'Semicolon', shift: true, label: ':', desc: '冒號' },
-  { code: 'Quote', shift: true, label: '"', desc: '雙引號' },
-  { code: 'Comma', shift: true, label: '<', desc: '小於符號' },
-  { code: 'Period', shift: true, label: '>', desc: '大於符號' },
-  { code: 'Slash', shift: true, label: '?', desc: '問號' },
-  { code: 'Backquote', shift: true, label: '~', desc: '波浪號' },
-  { code: 'ShiftLeft', shift: false, label: 'Shift', desc: '【功能】切換 中/英 或組合鍵', hint: '請按左 Shift' },
-  { code: 'CapsLock', shift: false, label: 'Caps', desc: '【功能】鎖定大寫', hint: '請按 Caps Lock' },
+  // --- 英文 Shift 組合鍵 ---
+  { code: 'Digit1', shift: true, label: '!', desc: '英文符號：驚嘆號' },
+  { code: 'Digit2', shift: true, label: '@', desc: '英文符號：小老鼠 (At)' },
+  { code: 'Digit3', shift: true, label: '#', desc: '英文符號：井字號' },
+  { code: 'Digit4', shift: true, label: '$', desc: '英文符號：錢符號' },
+  { code: 'Digit5', shift: true, label: '%', desc: '英文符號：百分比' },
+  { code: 'Digit7', shift: true, label: '&', desc: '英文符號：And (和)' },
+  { code: 'Digit8', shift: true, label: '*', desc: '英文符號：星號' },
+  { code: 'Slash', shift: true, label: '?', desc: '英文符號：問號' },
+  { code: 'Backquote', shift: true, label: '~', desc: '英文符號：波浪號' },
+
+  // --- 注音標點符號練習 (重要教學點) ---
+  { code: 'Comma', shift: false, label: '，', desc: '注音標點：全形逗號' },
+  { code: 'Period', shift: false, label: '。', desc: '注音標點：全形句號' },
+  { code: 'Quote', shift: false, label: '、', desc: '注音標點：頓號 (直式/橫式)' },
+  { code: 'Semicolon', shift: false, label: '；', desc: '注音標點：全形分號' },
+  { code: 'BracketLeft', shift: false, label: '「', desc: '注音標點：左引號' },
+  { code: 'BracketRight', shift: false, label: '」', desc: '注音標點：右引號' },
+  { code: 'Slash', shift: true, label: '？', desc: '注音標點：全形問號' },
+
+  // --- 核心功能鍵 ---
+  { code: 'ShiftLeft', shift: false, label: 'Shift', desc: '【功能】切換中英 或 組合鍵', hint: '請按左 Shift' },
+  { code: 'CapsLock', shift: false, label: 'Caps', desc: '【功能】鎖定大寫 / 切換大小寫', hint: '請按 Caps Lock' },
 ];
 
 const KEYBOARD_LAYOUT = [
@@ -50,7 +50,7 @@ const KEYBOARD_LAYOUT = [
   [{ code: 'ControlLeft', label: 'Ctrl', width: 1.5 }, { code: 'MetaLeft', label: 'Win', width: 1.25 }, { code: 'AltLeft', label: 'Alt', width: 1.25 }, { code: 'Space', label: 'Space', width: 6.5 }, { code: 'AltRight', label: 'Alt', width: 1.25 }, { code: 'MetaRight', label: 'Fn', width: 1.25 }, { code: 'ControlRight', label: 'Ctrl', width: 1.5 }]
 ];
 
-// 篩選出「純字鍵」(不含 Shift, CapsLock, Enter, Tab, 方向鍵等功能鍵)
+// 篩選純字鍵
 const FLAT_LAYOUT = KEYBOARD_LAYOUT.flat();
 const CHAR_KEYS_FOR_DRILL = FLAT_LAYOUT.filter(k => 
   k.code.startsWith('Key') || 
@@ -68,7 +68,7 @@ export default function App() {
   const [pressedKeys, setPressedKeys] = useState(new Set()); 
   const [combo, setCombo] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10.0);
-  const [lastRawCode, setLastRawCode] = useState(''); // 偵測 debug 用
+  const [lastRawCode, setLastRawCode] = useState('');
 
   const startTimeRef = useRef(0);
   const timerIntervalRef = useRef(null);
@@ -82,11 +82,9 @@ export default function App() {
   const nextRound = useCallback(() => {
     let task = null;
     if (gameMode === 'SYMBOL') {
-      // 符號模式：包含組合鍵與特殊按鍵挑戰
       const challenge = SYMBOL_CHALLENGES[Math.floor(Math.random() * SYMBOL_CHALLENGES.length)];
       task = { ...challenge };
     } else {
-      // 英文/注音模式：只出現純字鍵練習，不出現 Shift 或 CapsLock 挑戰
       const randomKey = CHAR_KEYS_FOR_DRILL[Math.floor(Math.random() * CHAR_KEYS_FOR_DRILL.length)];
       task = { code: randomKey.code, shift: false, label: randomKey.label, desc: '' };
     }
@@ -98,7 +96,7 @@ export default function App() {
 
   const startGame = useCallback(() => {
     setScore(0); setCombo(0); setIsPlaying(true);
-    setFeedback({ text: '開始！', type: 'success' });
+    setFeedback({ text: '開始挑戰！', type: 'success' });
     nextRound();
   }, [nextRound]);
 
@@ -108,7 +106,7 @@ export default function App() {
   }, []);
 
   const handleKeyDown = useCallback((e) => {
-    // 攔截系統預設快捷鍵
+    // 攔截瀏覽器快捷鍵
     if (/^F\d+$/.test(e.code) || ['Tab', 'Space', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].includes(e.code)) {
       e.preventDefault();
     }
@@ -124,13 +122,10 @@ export default function App() {
     
     // 判定邏輯
     if (currentTask.code === 'ShiftLeft') {
-        // Shift 挑戰 (僅在符號模式出現)
         if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') isCorrect = true;
     } else if (currentTask.code === 'CapsLock') {
-        // CapsLock 挑戰 (僅在符號模式出現)
         if (e.code === 'CapsLock') isCorrect = true;
     } else {
-        // 一般按鍵判定
         if (e.code === currentTask.code) {
             if (currentTask.shift) {
                 if (e.shiftKey) isCorrect = true;
@@ -278,9 +273,9 @@ export default function App() {
                 {gameMode === 'EN' ? '英文' : '注音'}模式：練習<span className="text-cyan-400">字鍵位置</span>
               </li>
               <li className={gameMode === 'SYMBOL' ? 'text-white' : 'opacity-40'}>
-                符號模式：練習<span className="text-yellow-400">組合鍵</span>與功能
+                符號模式：練習<span className="text-yellow-400">組合鍵與標點</span>
               </li>
-              <li>請確認輸入法為 <span className="text-white bg-slate-600 px-1 rounded">英文模式</span></li>
+              <li>注意：注音標點（如逗號）不需按 Shift。</li>
             </ul>
           </div>
         </div>
